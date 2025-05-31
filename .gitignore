@@ -1,0 +1,43 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+venv/
+env/
+ENV/
+
+# 개인 정보
+.env
+*.key
+credentials.json
+serviceAccountKey.json
+naver_cookies.json
+config.json
+
+# 로그
+logs/
+*.log
+
+# 데이터
+*.db
+*.sqlite
+visited_posts.json
+automation_stats.json
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# 빌드
+build/
+dist/
+*.spec
+*.exe
+
+# 기타
+.DS_Store
+Thumbs.db
