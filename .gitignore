@@ -8,23 +8,24 @@ venv/
 env/
 ENV/
 
-# 개인 정보
+# 중요: 개인 정보 및 인증 정보
 .env
 *.key
 credentials.json
 serviceAccountKey.json
+firebase-adminsdk-*.json
 naver_cookies.json
 config.json
+licenses.json
 
-# 로그
+# 로그 및 캐시
 logs/
 *.log
-
-# 데이터
-*.db
-*.sqlite
+cache/
+comment_history.json
 visited_posts.json
 automation_stats.json
+stats.json
 
 # IDE
 .vscode/
@@ -38,6 +39,6 @@ dist/
 *.spec
 *.exe
 
-# 기타
+# OS
 .DS_Store
 Thumbs.db
