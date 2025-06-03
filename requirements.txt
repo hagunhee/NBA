@@ -1,3 +1,4 @@
+# 기존 패키지들
 selenium==4.15.0
 undetected-chromedriver==3.5.3
 webdriver-manager==4.0.1
@@ -10,3 +11,10 @@ beautifulsoup4==4.12.2
 packaging==23.2
 python-dotenv==1.0.0
 pyinstaller==6.1.0
+
+# 추가할 패키지들
+pywin32
+wmi
+google-cloud-firestore
+psutil
+cpuinfo
