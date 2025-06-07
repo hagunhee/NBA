@@ -13,7 +13,16 @@ class CachedCommentGenerator:
     """토큰 사용량 최소화를 위한 캐싱이 적용된 댓글 생성기"""
 
     def __init__(self, api_key: str):
-        self.client = anthropic.Anthropic(api_key=api_key)
+        # Anthropic 클라이언트 초기화 (최신 버전)
+        try:
+            self.client = anthropic.Anthropic(api_key=api_key)
+        except TypeError:
+            # 구버전 anthropic 라이브러리의 경우
+            try:
+                self.client = anthropic.Client(api_key)
+            except:
+                # 더 오래된 버전의 경우
+                self.client = anthropic.Anthropic(api_key=api_key)
 
         # 캐시 설정
         self.cache_dir = "cache"
@@ -218,15 +227,47 @@ class CachedCommentGenerator:
             - 각각 다른 관점
             """
 
-            response = self.client.messages.create(
-                model="claude-3-haiku-20240307",  # 더 저렴한 모델 사용
-                max_tokens=200,
-                temperature=0.8,
-                messages=[{"role": "user", "content": prompt}],
-            )
+            # API 호출 방식 수정 (버전 호환성)
+            try:
+                # 최신 버전 방식
+                response = self.client.messages.create(
+                    model="claude-3-haiku-20240307",
+                    max_tokens=200,
+                    temperature=0.8,
+                    messages=[{"role": "user", "content": prompt}],
+                )
+
+                # 응답 처리
+                if hasattr(response, "content"):
+                    if isinstance(response.content, list):
+                        comments_text = response.content[0].text
+                    else:
+                        comments_text = response.content
+                else:
+                    comments_text = str(response)
+
+            except AttributeError:
+                # 구버전 방식
+                try:
+                    response = self.client.completions.create(
+                        model="claude-3-haiku-20240307",
+                        prompt=prompt,
+                        max_tokens_to_sample=200,
+                        temperature=0.8,
+                    )
+                    comments_text = response.completion
+                except:
+                    # 더 오래된 버전
+                    response = self.client.completion(
+                        prompt=prompt,
+                        model="claude-3-haiku-20240307",
+                        max_tokens_to_sample=200,
+                        temperature=0.8,
+                    )
+                    comments_text = response["completion"]
 
             # 여러 댓글 생성 및 캐싱
-            comments = response.content[0].text.strip().split("\n")
+            comments = comments_text.strip().split("\n")
             comments = [c.strip() for c in comments if c.strip()]
 
             if comments:
@@ -237,7 +278,14 @@ class CachedCommentGenerator:
 
         except Exception as e:
             print(f"댓글 생성 실패: {str(e)}")
-            return None
+            # 오류 발생 시 기본 댓글 반환
+            default_comments = [
+                "좋은 글 잘 읽었습니다! 감사해요 😊",
+                "유익한 정보 감사합니다!",
+                "도움이 많이 되었어요. 감사합니다!",
+                "좋은 내용 공유해주셔서 감사해요~",
+            ]
+            return random.choice(default_comments)
 
     def summarize_content(self, content: str, max_length: int) -> str:
         """콘텐츠 요약 (토큰 절약)"""

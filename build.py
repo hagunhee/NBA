@@ -4,7 +4,17 @@ import shutil
 
 
 def build():
-    """실행 파일 빌드"""
+    # 불필요한 파일 제외
+    exclude_patterns = [
+        "*.pyc",
+        "__pycache__",
+        ".git",
+        ".env",
+        "tests",
+        "docs",
+        "vscode",
+        "*.log",
+    ]
 
     # 이전 빌드 정리
     for dir in ["build", "dist"]:
