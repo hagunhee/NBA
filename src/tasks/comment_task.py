@@ -12,11 +12,9 @@ class WriteCommentTask(BaseTask):
     """댓글 작성 작업 - AI 기능 통합"""
 
     def __init__(self, name: str = "댓글 작성"):
-        super().__init__(
-            TaskType.WRITE_COMMENT, name, "블로그 포스트에 댓글을 작성합니다."
-        )
+        super().__init__(name)
 
-        # 기본 파라미터
+        # 기본 파라미터 - 모든 파라미터에 유효한 기본값 설정
         self.parameters = {
             "post_url": "",  # 특정 URL (없으면 컨텍스트에서)
             "comment_text": "",  # 댓글 내용 (없으면 자동 생성)
@@ -37,9 +35,16 @@ class WriteCommentTask(BaseTask):
         # AI 댓글 생성기
         self.ai_generator = None
         self.logger = logging.getLogger(__name__)
-
-        # 댓글 히스토리 (중복 방지)
         self.comment_history: List[str] = []
+
+    def _get_task_type(self) -> TaskType:
+        """작업 타입 반환"""
+        return TaskType.WRITE_COMMENT
+
+    @property
+    def description(self) -> str:
+        """작업 설명"""
+        return "블로그 포스트에 댓글을 작성합니다."
 
     def initialize_ai_generator(self):
         """AI 생성기 초기화"""
@@ -519,20 +524,34 @@ class WriteCommentTask(BaseTask):
         read_time_min = self.get_parameter("read_time_min", 30)
         read_time_max = self.get_parameter("read_time_max", 90)
 
-        if not isinstance(read_time_min, (int, float)) or read_time_min < 0:
-            return False
-        if not isinstance(read_time_max, (int, float)) or read_time_max < read_time_min:
+        try:
+            read_time_min = float(read_time_min)
+            read_time_max = float(read_time_max)
+
+            if read_time_min < 0 or read_time_max < read_time_min:
+                return False
+        except (ValueError, TypeError):
             return False
 
         # 댓글 스타일 검증
         valid_styles = ["친근함", "전문적", "캐주얼", "응원", "분석적", "질문형"]
         comment_style = self.get_parameter("comment_style", "친근함")
+
+        # 빈 문자열인 경우 기본값으로 설정
+        if not comment_style:
+            self.set_parameters(comment_style="친근함")
+            comment_style = "친근함"
+
         if comment_style not in valid_styles:
             return False
 
         # 댓글 길이 검증
         max_length = self.get_parameter("max_comment_length", 150)
-        if not isinstance(max_length, int) or max_length < 10 or max_length > 500:
+        try:
+            max_length = int(float(max_length))
+            if max_length < 10 or max_length > 500:
+                return False
+        except (ValueError, TypeError):
             return False
 
         return True

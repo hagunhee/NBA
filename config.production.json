@@ -1,0 +1,54 @@
+{
+    "license": {
+        "key": "test3"
+    },
+    "profiles": {
+        "네이버test": {
+            "naver_id": "darkblood11",
+            "naver_pw": "Z0FBQUFBQm9TQ1R3ZWdncFFzeEh0TEhXWGRVcnF4ZUlaWnVZZU9YaWtZWVY1VWVOQVdzMVRGa1pOZUlTbmxCQ3dna1FGS3FyUVVkWEEtZG05YU5WNkdTNW1hQWxWbVpDWjVCeGl1Nncwa1hOaEJGLVJiZTFtVzNPUlVtaXhzNGU2RmpudE5aallRenpLeXN5YUdwaEZxZ2VNeUUxeElhYWFfR2ZIUDdTS2VvXzhBZzdhVUtRZmI4PQ==",
+            "save_pw": true,
+            "created_at": 1749558259.1738346
+        }
+    },
+    "current_profile": "네이버test",
+    "account": {
+        "naver_id": "darkblood11",
+        "naver_pw": "Z0FBQUFBQm9TQ1R3ZWdncFFzeEh0TEhXWGRVcnF4ZUlaWnVZZU9YaWtZWVY1VWVOQVdzMVRGa1pOZUlTbmxCQ3dna1FGS3FyUVVkWEEtZG05YU5WNkdTNW1hQWxWbVpDWjVCeGl1Nncwa1hOaEJGLVJiZTFtVzNPUlVtaXhzNGU2RmpudE5aallRenpLeXN5YUdwaEZxZ2VNeUUxeElhYWFfR2ZIUDdTS2VvXzhBZzdhVUtRZmI4PQ==",
+        "save_id": true,
+        "save_pw": true
+    },
+    "automation": {
+        "min_stay_time": 60,
+        "max_stay_time": 180,
+        "delay_min": 10,
+        "delay_max": 30,
+        "daily_limit": 20,
+        "scroll_speed": "보통",
+        "natural_scroll": true,
+        "auto_comment": true,
+        "auto_like": true,
+        "comment_style": "친근함",
+        "retry_count": 3,
+        "continue_on_error": true,
+        "auto_restart": false
+    },
+    "browser": {
+        "headless": false,
+        "window_size": "1280x800",
+        "user_agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36",
+        "timeout": 15
+    },
+    "cache": {
+        "enabled": true,
+        "ttl_days": 7,
+        "max_entries": 1000
+    },
+    "update": {
+        "auto_check": true,
+        "check_interval": 86400,
+        "last_check": ""
+    },
+    "logging": {
+        "level": "기본"
+    }
+}

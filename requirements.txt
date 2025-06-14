@@ -1,20 +1,55 @@
-# 기존 패키지들
+# 네이버 블로그 자동화 프로그램 의존성
+# Python 3.8+ 필요
+
+# 웹 자동화
 selenium==4.15.0
 undetected-chromedriver==3.5.3
 webdriver-manager==4.0.1
+beautifulsoup4==4.12.2
+
+# AI 기능
 anthropic==0.5.0
+
+# Firebase & Firestore
 firebase-admin==6.1.0
+google-cloud-firestore
+
+# 보안 및 암호화
 cryptography==41.0.7
 keyring==24.2.0
-requests==2.31.0
-beautifulsoup4==4.12.2
-packaging==23.2
 python-dotenv==1.0.0
-pyinstaller==6.1.0
 
-# 추가할 패키지들
-pywin32
-wmi
-google-cloud-firestore
+# 네트워크
+requests==2.31.0
+
+# 시스템 정보
 psutil
 cpuinfo
+
+# Windows 전용 (선택적)
+pywin32; platform_system=="Windows"
+wmi; platform_system=="Windows"
+
+# 유틸리티
+packaging==23.2
+
+# 빌드 도구
+pyinstaller==6.1.0
+
+# GUI (tkinter는 Python에 포함)
+# tkinter는 시스템 패키지로 설치해야 할 수 있음
+# Ubuntu/Debian: sudo apt-get install python3-tk
+# macOS: brew install python-tk
+
+# 네트워크 인터페이스 정보 (선택적)
+netifaces==0.11.0
+
+# 로깅 향상 (선택적)
+colorlog==6.8.0
+
+# 개발 도구 (선택적)
+# pytest==7.4.3
+# black==23.12.0
+# flake8==6.1.0
+# mypy==1.7.1
+# pre-commit==3.5.0

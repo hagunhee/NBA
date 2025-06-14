@@ -1,17 +1,26 @@
+"""
+프로그램 설정 관리
+"""
+
 import json
 import os
 from typing import Any, Dict, Optional, List
 from dotenv import load_dotenv
 
+# .env 파일 로드
+load_dotenv()
+
 
 class Config:
     """프로그램 설정 관리"""
 
-    def __init__(self, config_file: str = "config.json"):
-        self.config_file = config_file
-        self.config = self.load_config()
+    def __init__(self, env: str = "production"):
+        self.env = env
+        self.config_file = f"config.{env}.json"
+        # config 속성 초기화 (중요!)
+        self.config: Dict[str, Any] = self.load_config()
 
-    def load_config(self) -> Dict:
+    def load_config(self) -> Dict[str, Any]:
         """설정 파일 로드"""
         if os.path.exists(self.config_file):
             try:
@@ -27,7 +36,7 @@ class Config:
         else:
             return self.get_default_config()
 
-    def _merge_config(self, default: Dict, loaded: Dict):
+    def _merge_config(self, default: Dict[str, Any], loaded: Dict[str, Any]) -> None:
         """로드된 설정을 기본 설정에 병합"""
         for key, value in loaded.items():
             if (
@@ -39,7 +48,7 @@ class Config:
             else:
                 default[key] = value
 
-    def get_default_config(self) -> Dict:
+    def get_default_config(self) -> Dict[str, Any]:
         """기본 설정"""
         return {
             "license": {"key": ""},
@@ -70,13 +79,14 @@ class Config:
                 "headless": False,
                 "window_size": "1280x800",
                 "user_agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36",
+                "timeout": 15,
             },
             "cache": {"enabled": True, "ttl_days": 7, "max_entries": 1000},
             "update": {"auto_check": True, "check_interval": 86400, "last_check": ""},
             "logging": {"level": "기본"},
         }
 
-    def save(self):
+    def save(self) -> None:
         """설정 저장"""
         try:
             # 디렉토리가 없으면 생성
@@ -93,17 +103,17 @@ class Config:
 
     # === 프로필 관련 메서드 추가 ===
 
-    def get_profiles(self) -> Dict[str, Dict]:
+    def get_profiles(self) -> Dict[str, Dict[str, Any]]:
         """모든 프로필 가져오기"""
         return self.config.get("profiles", {})
 
-    def get_profile(self, profile_name: str) -> Optional[Dict]:
+    def get_profile(self, profile_name: str) -> Optional[Dict[str, Any]]:
         """특정 프로필 가져오기"""
         return self.config.get("profiles", {}).get(profile_name)
 
     def save_profile(
         self, profile_name: str, naver_id: str, naver_pw: str, save_pw: bool = True
-    ):
+    ) -> None:
         """프로필 저장"""
         if "profiles" not in self.config:
             self.config["profiles"] = {}
@@ -132,7 +142,7 @@ class Config:
 
         self.save()
 
-    def delete_profile(self, profile_name: str):
+    def delete_profile(self, profile_name: str) -> None:
         """프로필 삭제"""
         if "profiles" in self.config and profile_name in self.config["profiles"]:
             del self.config["profiles"][profile_name]
@@ -149,7 +159,7 @@ class Config:
 
             self.save()
 
-    def set_current_profile(self, profile_name: str):
+    def set_current_profile(self, profile_name: str) -> bool:
         """현재 프로필 설정"""
         if profile_name in self.config.get("profiles", {}):
             self.config["current_profile"] = profile_name
@@ -185,13 +195,13 @@ class Config:
         except KeyError:
             return default
 
-    def set(self, section: str, key: str, value: Any):
+    def set(self, section: str, key: str, value: Any) -> None:
         """설정값 저장"""
         if section not in self.config:
             self.config[section] = {}
         self.config[section][key] = value
 
-    def remove(self, section: str, key: str):
+    def remove(self, section: str, key: str) -> None:
         """설정값 삭제"""
         try:
             if section in self.config and key in self.config[section]:
@@ -199,7 +209,7 @@ class Config:
         except KeyError:
             pass
 
-    def get_section(self, section: str) -> Optional[Dict]:
+    def get_section(self, section: str) -> Dict[str, Any]:
         """섹션 전체 가져오기"""
         return self.config.get(section, {})
 
@@ -210,12 +220,12 @@ class Config:
         except:
             return False
 
-    def clear_section(self, section: str):
+    def clear_section(self, section: str) -> None:
         """섹션 전체 삭제"""
         if section in self.config:
             self.config[section] = {}
 
-    def reset_to_default(self):
+    def reset_to_default(self) -> None:
         """기본 설정으로 초기화"""
         self.config = self.get_default_config()
         self.save()
